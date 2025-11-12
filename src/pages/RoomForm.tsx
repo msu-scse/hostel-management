@@ -7,11 +7,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import roomService from '@/lib/roomService';
+import { useEffect } from 'react';
 
 export default function RoomForm() {
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { id } = useParams();
   
   const form = useForm<RoomFormData>({
     resolver: zodResolver(roomSchema),
@@ -25,13 +28,58 @@ export default function RoomForm() {
   });
 
   const onSubmit = (data: RoomFormData) => {
-    console.log('Room data:', data);
-    toast({
-      title: 'Room added successfully',
-      description: `Room ${data.number} has been created.`,
-    });
-    navigate('/rooms');
+    (async () => {
+      if (id) {
+        // update existing room
+        const updated = await roomService.updateRoom(id, {
+          number: data.number,
+          floor: data.floor,
+          capacity: data.capacity,
+          type: data.type,
+          hostel: data.hostel,
+        } as Partial<import('@/types').Room>);
+        toast({
+          title: 'Room updated',
+          description: `Room ${updated?.number} has been updated.`,
+        });
+        navigate(`/rooms/${id}`);
+        return;
+      }
+
+      const newRoom: import('@/types').Room = {
+        id: `r_${Date.now()}`,
+        number: data.number,
+        floor: data.floor,
+        capacity: data.capacity,
+        type: data.type,
+        status: 'available',
+        hostel: data.hostel,
+        occupied: 0,
+        students: [],
+      };
+      await roomService.createRoom(newRoom);
+      toast({
+        title: 'Room added successfully',
+        description: `Room ${data.number} has been created.`,
+      });
+      navigate('/rooms');
+    })();
   };
+
+  useEffect(() => {
+    if (!id) return;
+    (async () => {
+      const r = await roomService.getRoomById(id);
+      if (!r) return;
+      form.reset({
+        number: r.number,
+        floor: r.floor,
+        capacity: r.capacity,
+        type: r.type,
+        hostel: r.hostel,
+      });
+    })();
+  }, [id, form]);
 
   return (
     <div className="space-y-6">

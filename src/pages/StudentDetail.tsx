@@ -166,14 +166,6 @@ export default function StudentDetail() {
       <div className="grid gap-4 md:grid-cols-4">
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Attendance</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold text-success">94%</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">Complaints Filed</CardTitle>
           </CardHeader>
           <CardContent>

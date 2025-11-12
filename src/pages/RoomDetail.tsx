@@ -1,8 +1,9 @@
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, Users, Building, Edit, Bed, Plus } from 'lucide-react';
+import roomService from '@/lib/roomService';
 import { mockRooms, mockStudents } from '@/lib/mockData';
 import {
   Select,
@@ -12,7 +13,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function RoomDetail() {
   const { id } = useParams();
@@ -20,8 +21,21 @@ export default function RoomDetail() {
   const { toast } = useToast();
   const [selectedStudent, setSelectedStudent] = useState<string>('');
   
-  const room = mockRooms.find(r => r.id === id);
-  const unassignedStudents = mockStudents.filter(s => !s.roomNumber || s.roomNumber === '');
+  const [room, setRoom] = useState(() => mockRooms.find(r => r.id === id));
+  const [unassignedStudents, setUnassignedStudents] = useState(() => mockStudents.filter(s => !s.roomNumber || s.roomNumber === ''));
+
+  // refresh real data from storage
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      const r = await roomService.getRoomById(id || '');
+      const students = await roomService.getStudents();
+      if (!mounted) return;
+      setRoom(r);
+      setUnassignedStudents(students.filter(s => !s.roomNumber || s.roomNumber === ''));
+    })();
+    return () => { mounted = false; };
+  }, [id]);
 
   if (!room) {
     return (
@@ -49,21 +63,32 @@ export default function RoomDetail() {
 
   const handleAssignStudent = () => {
     if (!selectedStudent) return;
-    
-    const student = mockStudents.find(s => s.id === selectedStudent);
-    toast({
-      title: 'Student assigned',
-      description: `${student?.name} has been assigned to room ${room.number}.`,
-    });
-    setSelectedStudent('');
+    (async () => {
+      const res = await roomService.assignStudentToRoom(id || '', selectedStudent);
+      toast({
+        title: 'Student assigned',
+        description: `${res.student?.name} has been assigned to room ${res.room?.number}.`,
+      });
+      const r = await roomService.getRoomById(id || '');
+      const students = await roomService.getStudents();
+      setRoom(r);
+      setUnassignedStudents(students.filter(s => !s.roomNumber || s.roomNumber === ''));
+      setSelectedStudent('');
+    })();
   };
 
   const handleRemoveStudent = (studentId: string) => {
-    const student = room.students?.find(s => s.id === studentId);
-    toast({
-      title: 'Student removed',
-      description: `${student?.name} has been removed from room ${room.number}.`,
-    });
+    (async () => {
+      const res = await roomService.removeStudentFromRoom(id || '', studentId);
+      toast({
+        title: 'Student removed',
+        description: `${res.student?.name} has been removed from room ${res.room?.number}.`,
+      });
+      const r = await roomService.getRoomById(id || '');
+      const students = await roomService.getStudents();
+      setRoom(r);
+      setUnassignedStudents(students.filter(s => !s.roomNumber || s.roomNumber === ''));
+    })();
   };
 
   const availableSlots = room.capacity - room.occupied;
@@ -81,11 +106,45 @@ export default function RoomDetail() {
           </div>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline">
-            <Edit className="mr-2 h-4 w-4" />
-            Edit Room
+          <Button variant="outline" asChild>
+            <Link to={`/rooms/${id}/edit`}>
+              <>
+                <Edit className="mr-2 h-4 w-4" />
+                Edit Room
+              </>
+            </Link>
           </Button>
-          <Button>Change Status</Button>
+          <Select
+            onValueChange={async (value) => {
+              await roomService.updateRoom(id || '', { status: value as 'available' | 'occupied' | 'maintenance' | 'reserved' });
+              const r = await roomService.getRoomById(id || '');
+              setRoom(r);
+              toast({ title: 'Status updated', description: `Room status changed to ${value}` });
+            }}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Change Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="available">Available</SelectItem>
+              <SelectItem value="occupied">Occupied</SelectItem>
+              <SelectItem value="maintenance">Maintenance</SelectItem>
+              <SelectItem value="reserved">Reserved</SelectItem>
+            </SelectContent>
+          </Select>
+          <Button variant="destructive" onClick={async () => {
+            const ok = window.confirm('Delete this room? This cannot be undone.');
+            if (!ok) return;
+            const success = await roomService.deleteRoom(id || '');
+            if (success) {
+              toast({ title: 'Room deleted', description: 'Room has been removed.' });
+              navigate('/rooms');
+            } else {
+              toast({ title: 'Error', description: 'Could not delete room.' });
+            }
+          }}>
+            Delete
+          </Button>
         </div>
       </div>
 

@@ -3,9 +3,9 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Plus, Users, Building, Filter } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
-import { mockRooms } from '@/lib/mockData';
+import roomService from '@/lib/roomService';
 import { Room } from '@/types';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Select,
   SelectContent,
@@ -20,7 +20,17 @@ export default function Rooms() {
   const [hostelFilter, setHostelFilter] = useState<string>('all');
   const [floorFilter, setFloorFilter] = useState<string>('all');
   
-  const rooms = mockRooms;
+  const [rooms, setRooms] = useState<Room[]>([]);
+
+  // load rooms from service
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      const data = await roomService.getRooms();
+      if (mounted) setRooms(data);
+    })();
+    return () => { mounted = false; };
+  }, []);
   
   // Get unique values for filters
   const hostels = Array.from(new Set(rooms.map(r => r.hostel)));

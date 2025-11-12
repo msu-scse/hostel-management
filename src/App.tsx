@@ -19,6 +19,15 @@ import ComplaintForm from "./pages/ComplaintForm";
 import Leaves from "./pages/Leaves";
 import LeaveForm from "./pages/LeaveForm";
 import Notifications from "./pages/Notifications";
+import Staff from "./pages/Staff";
+import StaffForm from "./pages/StaffForm";
+import MyRoom from "./pages/MyRoom";
+import MyComplaints from "./pages/MyComplaints";
+import MyLeaves from "./pages/MyLeaves";
+import MyFees from "./pages/MyFees";
+import Fees from "./pages/Fees";
+import FeeForm from "./pages/FeeForm";
+import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -86,7 +95,47 @@ const App = () => (
               }
             />
             <Route
+              path="/staff"
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <DashboardLayout>
+                    <Staff />
+                  </DashboardLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/staff/new"
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <DashboardLayout>
+                    <StaffForm />
+                  </DashboardLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/staff/:id/edit"
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <DashboardLayout>
+                    <StaffForm />
+                  </DashboardLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path="/rooms/new"
+              element={
+                <ProtectedRoute allowedRoles={['admin', 'warden']}>
+                  <DashboardLayout>
+                    <RoomForm />
+                  </DashboardLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/rooms/:id/edit"
               element={
                 <ProtectedRoute allowedRoles={['admin', 'warden']}>
                   <DashboardLayout>
@@ -151,6 +200,89 @@ const App = () => (
                 <ProtectedRoute allowedRoles={['admin', 'warden']}>
                   <DashboardLayout>
                     <Notifications />
+                  </DashboardLayout>
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Student personal pages */}
+            <Route
+              path="/my-room"
+              element={
+                <ProtectedRoute allowedRoles={['student']}>
+                  <DashboardLayout>
+                    <MyRoom />
+                  </DashboardLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/my-complaints"
+              element={
+                <ProtectedRoute allowedRoles={['student']}>
+                  <DashboardLayout>
+                    <MyComplaints />
+                  </DashboardLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/my-leaves"
+              element={
+                <ProtectedRoute allowedRoles={['student']}>
+                  <DashboardLayout>
+                    <MyLeaves />
+                  </DashboardLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/my-fees"
+              element={
+                <ProtectedRoute allowedRoles={['student']}>
+                  <DashboardLayout>
+                    <MyFees />
+                  </DashboardLayout>
+                </ProtectedRoute>
+              }
+            />
+            {/* Admin / Warden fees management */}
+            <Route
+              path="/fees"
+              element={
+                <ProtectedRoute allowedRoles={['admin', 'warden']}>
+                  <DashboardLayout>
+                    <Fees />
+                  </DashboardLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/fees/new"
+              element={
+                <ProtectedRoute allowedRoles={['admin', 'warden']}>
+                  <DashboardLayout>
+                    <FeeForm />
+                  </DashboardLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/fees/:id/edit"
+              element={
+                <ProtectedRoute allowedRoles={['admin', 'warden']}>
+                  <DashboardLayout>
+                    <FeeForm />
+                  </DashboardLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <DashboardLayout>
+                    <Profile />
                   </DashboardLayout>
                 </ProtectedRoute>
               }

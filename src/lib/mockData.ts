@@ -1,4 +1,4 @@
-import { Student, Room, Complaint, LeaveRequest, Notification } from '@/types';
+import { Student, Room, Complaint, LeaveRequest, Notification, Fee } from '@/types';
 
 // Students Mock Data
 export const mockStudents: Student[] = [
@@ -102,6 +102,19 @@ export const mockStudents: Student[] = [
     course: 'B.Sc Chemistry',
     year: 1,
     roomNumber: 'B-105',
+    guardianName: 'Dr. Suresh Nair',
+    guardianPhone: '+91 9876543225',
+    address: '567 MG Road, Kochi, Kerala 682011',
+  },
+  {
+    id: '9',
+    name: 'Abhijit Kirtunia',
+    email: 'meera.nair@medhavi.edu',
+    phone: '+91 9876543224',
+    enrollmentNumber: 'MSU202400809879',
+    course: 'B.Sc Chemistry',
+    year: 1,
+    roomNumber: '',
     guardianName: 'Dr. Suresh Nair',
     guardianPhone: '+91 9876543225',
     address: '567 MG Road, Kochi, Kerala 682011',
@@ -365,6 +378,41 @@ export const mockLeaveRequests: LeaveRequest[] = [
   },
 ];
 
+// Fees Mock Data
+export const mockFees: Fee[] = [
+  {
+    id: 'f1',
+    studentId: '1',
+    studentName: 'Rahul Kumar',
+    amount: 12000,
+    dueDate: '2024-01-25',
+    status: 'pending',
+    type: 'hostel',
+    description: 'Hostel fees for semester Jan-Jun 2024',
+  },
+  {
+    id: 'f2',
+    studentId: '2',
+    studentName: 'Priya Sharma',
+    amount: 12000,
+    dueDate: '2024-01-25',
+    paidDate: '2024-01-20',
+    status: 'paid',
+    type: 'hostel',
+    description: 'Hostel fees for semester Jan-Jun 2024',
+  },
+  {
+    id: 'f3',
+    studentId: '1',
+    studentName: 'Rahul Kumar',
+    amount: 1500,
+    dueDate: '2024-02-10',
+    status: 'pending',
+    type: 'mess',
+    description: 'Mess advance for February',
+  },
+];
+
 // Notifications Mock Data
 export const mockNotifications: Notification[] = [
   {
@@ -430,7 +478,6 @@ export const getDashboardStats = (role: 'admin' | 'warden' | 'student') => {
       roomNumber: 'A-204',
       pendingFees: '₹12,000',
       activeComplaints: 2,
-      attendance: '92%',
     };
   }
   

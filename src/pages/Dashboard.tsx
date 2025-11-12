@@ -40,8 +40,8 @@ export default function Dashboard() {
     { title: 'Room Number', value: stats.roomNumber || 'N/A', icon: DoorOpen, color: 'text-primary' },
     { title: 'Pending Fees', value: stats.pendingFees || '₹0', icon: CreditCard, color: 'text-accent' },
     { title: 'Active Complaints', value: stats.activeComplaints?.toString() || '0', icon: MessageSquare, color: 'text-destructive' },
-    { title: 'Attendance', value: stats.attendance || '0%', icon: TrendingUp, color: 'text-success' },
   ];
+    
 
   const COLORS = ['hsl(var(--primary))', 'hsl(var(--secondary))', 'hsl(var(--accent))', 'hsl(var(--warning))', 'hsl(var(--info))'];
 

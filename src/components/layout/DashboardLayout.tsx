@@ -44,7 +44,6 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
     { name: 'Fees', href: '/fees', icon: CreditCard, roles: ['admin', 'warden'] },
     { name: 'Complaints', href: '/complaints', icon: MessageSquare, roles: ['admin', 'warden', 'student'] },
     { name: 'Leaves', href: '/leaves', icon: Calendar, roles: ['admin', 'warden', 'student'] },
-    { name: 'Attendance', href: '/attendance', icon: ClipboardList, roles: ['admin', 'warden'] },
     { name: 'Staff', href: '/staff', icon: UserCog, roles: ['admin'] },
     { name: 'Notifications', href: '/notifications', icon: Bell, roles: ['admin', 'warden'] },
     
@@ -53,7 +52,7 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
     { name: 'My Fees', href: '/my-fees', icon: CreditCard, roles: ['student'] },
     { name: 'My Complaints', href: '/my-complaints', icon: MessageSquare, roles: ['student'] },
     { name: 'My Leaves', href: '/my-leaves', icon: Calendar, roles: ['student'] },
-    { name: 'My Attendance', href: '/my-attendance', icon: ClipboardList, roles: ['student'] },
+    
   ];
 
   const filteredNavigation = navigation.filter(
@@ -91,16 +90,18 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
           })}
         </nav>
 
-        <div className="border-t border-sidebar-border p-4">
-          <div className="flex items-center gap-3 px-3 py-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary-glow text-white font-semibold shadow-lg">
-              {user?.name.charAt(0)}
+          <div className="border-t border-sidebar-border p-4">
+          <Link to="/profile" className="block">
+            <div className="flex items-center gap-3 px-3 py-2">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary-glow text-white font-semibold shadow-lg">
+                {user?.name.charAt(0)}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium truncate text-sidebar-foreground">{user?.name}</p>
+                <p className="text-xs text-sidebar-foreground/60 capitalize">{user?.role}</p>
+              </div>
             </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium truncate text-sidebar-foreground">{user?.name}</p>
-              <p className="text-xs text-sidebar-foreground/60 capitalize">{user?.role}</p>
-            </div>
-          </div>
+          </Link>
           <Button
             variant="ghost"
             className="mt-2 w-full justify-start text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent"
@@ -161,15 +162,17 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
           </nav>
 
           <div className="border-t border-border p-4">
-            <div className="flex items-center gap-3 px-3 py-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                {user?.name.charAt(0)}
+            <Link to="/profile" className="block">
+              <div className="flex items-center gap-3 px-3 py-2">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                  {user?.name.charAt(0)}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium truncate">{user?.name}</p>
+                  <p className="text-xs text-muted-foreground capitalize">{user?.role}</p>
+                </div>
               </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium truncate">{user?.name}</p>
-                <p className="text-xs text-muted-foreground capitalize">{user?.role}</p>
-              </div>
-            </div>
+            </Link>
             <Button
               variant="ghost"
               className="mt-2 w-full justify-start text-muted-foreground hover:text-foreground"
@@ -210,10 +213,10 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
               <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary-glow text-white text-sm font-semibold shadow-md">
                 {user?.name.charAt(0)}
               </div>
-              <div className="hidden xl:block">
+              <Link to="/profile" className="hidden xl:flex flex-col">
                 <p className="text-sm font-medium">{user?.name}</p>
                 <p className="text-xs text-muted-foreground capitalize">{user?.role}</p>
-              </div>
+              </Link>
             </div>
           </div>
         </header>

@@ -74,13 +74,17 @@ export interface LeaveRequest {
   approvedAt?: string;
 }
 
-export interface Attendance {
+export interface Staff {
   id: string;
-  studentId: string;
-  date: string;
-  status: 'present' | 'absent' | 'on-leave';
-  markedBy: string;
+  name: string;
+  email: string;
+  phone?: string;
+  role: 'warden' | 'other';
+  position?: string;
+  hostel?: string;
+  avatar?: string;
 }
+
 
 export interface Notification {
   id: string;
