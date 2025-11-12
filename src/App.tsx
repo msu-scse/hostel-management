@@ -18,6 +18,7 @@ import Complaints from "./pages/Complaints";
 import ComplaintForm from "./pages/ComplaintForm";
 import Leaves from "./pages/Leaves";
 import LeaveForm from "./pages/LeaveForm";
+import Notifications from "./pages/Notifications";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -140,6 +141,16 @@ const App = () => (
                 <ProtectedRoute>
                   <DashboardLayout>
                     <LeaveForm />
+                  </DashboardLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/notifications"
+              element={
+                <ProtectedRoute allowedRoles={['admin', 'warden']}>
+                  <DashboardLayout>
+                    <Notifications />
                   </DashboardLayout>
                 </ProtectedRoute>
               }

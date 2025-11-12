@@ -1,4 +1,4 @@
-import { Student, Room, Complaint, LeaveRequest } from '@/types';
+import { Student, Room, Complaint, LeaveRequest, Notification } from '@/types';
 
 // Students Mock Data
 export const mockStudents: Student[] = [
@@ -362,6 +362,64 @@ export const mockLeaveRequests: LeaveRequest[] = [
     reason: 'Job interview in Delhi.',
     status: 'pending',
     createdAt: '2024-01-14T13:15:00Z',
+  },
+];
+
+// Notifications Mock Data
+export const mockNotifications: Notification[] = [
+  {
+    id: '1',
+    title: 'New Complaint Filed',
+    message: 'Rahul Kumar filed a complaint about AC not working in room A-204.',
+    type: 'warning',
+    createdAt: '2024-01-15T10:30:00Z',
+    createdBy: 'System',
+    targetRoles: ['admin', 'warden'],
+  },
+  {
+    id: '2',
+    title: 'Leave Request Approved',
+    message: 'Your leave request from 18th Jan to 20th Jan has been approved.',
+    type: 'success',
+    createdAt: '2024-01-13T09:00:00Z',
+    createdBy: 'Warden Singh',
+    targetRoles: ['student'],
+  },
+  {
+    id: '3',
+    title: 'Maintenance Scheduled',
+    message: 'Routine maintenance for Block A will be conducted on 20th January. Water supply will be affected.',
+    type: 'info',
+    createdAt: '2024-01-12T16:00:00Z',
+    createdBy: 'Admin',
+    targetRoles: ['admin', 'warden', 'student'],
+  },
+  {
+    id: '4',
+    title: 'Fee Payment Reminder',
+    message: 'Hostel fees for this semester are due by 25th January. Please make the payment to avoid late fees.',
+    type: 'warning',
+    createdAt: '2024-01-10T09:00:00Z',
+    createdBy: 'Accounts Department',
+    targetRoles: ['student'],
+  },
+  {
+    id: '5',
+    title: 'Security Alert',
+    message: 'All students must carry their ID cards. Random checks will be conducted.',
+    type: 'error',
+    createdAt: '2024-01-08T14:30:00Z',
+    createdBy: 'Security',
+    targetRoles: ['student'],
+  },
+  {
+    id: '6',
+    title: 'New Student Registration',
+    message: '15 new students have been registered for the upcoming semester.',
+    type: 'info',
+    createdAt: '2024-01-07T11:00:00Z',
+    createdBy: 'System',
+    targetRoles: ['admin', 'warden'],
   },
 ];
 
