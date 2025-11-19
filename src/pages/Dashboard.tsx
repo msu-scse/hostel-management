@@ -1,4 +1,5 @@
 import { useAuth } from '@/contexts/AuthContext';
+import { useHostel } from '@/contexts/HostelContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Users, DoorOpen, CreditCard, MessageSquare, TrendingUp, AlertCircle, Calendar, Building2, Plus } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
@@ -6,10 +7,7 @@ import { Button } from '@/components/ui/button';
 import { LucideIcon } from 'lucide-react';
 import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { getDashboardStats, getOccupancyChartData, getComplaintsByCategoryData, mockComplaints, mockLeaveRequests } from '@/lib/mockData';
-import { useEffect, useState } from 'react';
-import { useNavigate, useParams, Navigate } from 'react-router-dom';
-import hostelService from '@/lib/hostelService';
-import { Hostel } from '@/types';
+import { useNavigate, Navigate } from 'react-router-dom';
 
 type StatWithTrend = {
   title: string;
@@ -31,27 +29,7 @@ type Stat = StatWithTrend | StatWithoutTrend;
 export default function Dashboard() {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const { hostelId } = useParams();
-  const [hostels, setHostels] = useState<Hostel[]>([]);
-  const [selectedHostel, setSelectedHostel] = useState<Hostel | null>(null);
-  
-  useEffect(() => {
-    if (user?.role === 'admin') {
-      loadHostels();
-    }
-  }, [user]);
-
-  useEffect(() => {
-    if (hostelId && hostels.length > 0) {
-      const hostel = hostels.find(h => h.id === hostelId);
-      setSelectedHostel(hostel || null);
-    }
-  }, [hostelId, hostels]);
-
-  const loadHostels = async () => {
-    const data = await hostelService.getHostels();
-    setHostels(data);
-  };
+  const { selectedHostel, hostels } = useHostel();
 
   const stats = getDashboardStats(user?.role || 'student');
   const occupancyData = getOccupancyChartData();
